@@ -417,4 +417,6 @@ if( typeof file_uploader_note_text != 'undefined' )
 
 	// Print JS function to allow edit file properties on modal window
 	echo_file_properties();
+	// Delete file confirmation js (modal)
+	echo_confirm_file_delete();
 ?>

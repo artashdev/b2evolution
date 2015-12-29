@@ -2794,4 +2794,86 @@ echo_modalwindow_js();
 </script>
 <?php
 }
+
+/**
+ * Initialize JavaScript for AJAX loading of popup window to report user
+ *
+ * @param array Params
+ */
+function echo_confirm_file_delete()
+{
+?>
+<script type="text/javascript">
+	//<![CDATA[
+	function getQueryVariable(variable, href) {
+		var vars = href.split("&");
+		for (var i=0;i<vars.length;i++) {
+			var pair = vars[i].split("=");
+			if (pair[0] == variable) {
+				return pair[1];
+			}
+		}
+	}
+	// Modal to delete file
+	function confirm_file_delete( href )
+	{
+		var blog = getQueryVariable("/admin.php?blog", href);
+		var ctrl = getQueryVariable("ctrl", href);
+		var root = getQueryVariable("root", href);
+		var action = getQueryVariable("action", href);
+		var fm_selected = getQueryVariable("fm_selected[]", href);
+		var crumb_file = getQueryVariable("crumb_file", href);
+
+		if (!jQuery('#dataConfirmModal').length) {
+			jQuery('body').append('' +
+				'<div id="dataConfirmModal" class="modal fade pin_modal" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true">' +
+					'<div class="modal-dialog manage_page_modal">'+
+						'<div class="modal-content">'+
+							'<div class="modal-header">' +
+								'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+								'<h3 id="dataConfirmLabel">'+'<?php echo TS_('Confirm delete'); ?>'+'</h3>' +
+							'</div>' +
+							'<form method="post" action="admin.php">'+
+								'<div class="modal-body">' +
+									'<div class="alert alert-danger">'+
+										'<?php echo TS_('Do you really want to delete the following file?'); ?>'+
+									'</div>'+
+									'<input name="crumb_file" type="hidden" value="'+crumb_file+'">'+
+									'<input name="ctrl" type="hidden" value="'+ctrl+'">'+
+									'<input name="locale" type="hidden">'+
+									'<input name="blog" type="hidden" value="'+blog+'">'+
+									'<input name="mode" type="hidden" value="">'+
+									'<input name="ajax_request" type="hidden" value="0">'+
+									'<input name="root" type="hidden" value="'+root+'">'+
+									'<input name="path" type="hidden" value="/">'+
+									'<input name="fm_mode" type="hidden" value="">'+
+									'<input name="linkctrl" type="hidden" value="">'+
+									'<input name="linkdata" type="hidden" value="">'+
+									'<input name="iframe_name" type="hidden" value="">'+
+									'<input name="fm_selected[0]" type="hidden" value="'+fm_selected+'">'+
+									'<input name="fm_hide_dirtree" type="hidden" value="0">'+
+									'<input name="fm_filter" type="hidden">'+
+									'<input name="fm_filter_regex" type="hidden" value="0">'+
+									'<input name="fm_flatmode" type="hidden">'+
+									'<input name="fm_order" type="hidden">'+
+									'<input name="fm_orderasc" type="hidden">'+
+									'<input name="action" type="hidden" value="'+action+'">'+
+									'<input name="confirmed" type="hidden" value="1">'+
+								'</div>' +
+								'<div class="modal-footer">' +
+									'<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">'+'<?php echo TS_('Cancel'); ?>'+'</button>' +
+									'<input tag="input" type="submit" class="DeleteButton btn-danger btn" name="submit" value="Delete">'+
+								'</div>' +
+							'</form>'+
+						'</div>' +
+					'</div>' +
+				'</div>');
+		}
+		jQuery('#dataConfirmModal').modal({show:true});
+		return false;
+	}
+	//]]>
+</script>
+<?php
+}
 ?>

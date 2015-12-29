@@ -65,7 +65,8 @@ if( $display_invitation == 'deny' )
 }
 
 echo $params['register_page_before'];
-
+// I think you don't need to show errors twice
+/*
 if( $params['display_form_messages'] )
 { // Display the form messages before form inside wrapper
 	messages( array(
@@ -73,6 +74,7 @@ if( $params['display_form_messages'] )
 			'block_end'   => '</div>',
 		) );
 }
+*/
 
 // Save trigger page
 $session_registration_trigger_url = $Session->get( 'registration_trigger_url' );
