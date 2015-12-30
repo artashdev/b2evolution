@@ -1974,7 +1974,7 @@ function get_available_filetype_icons()
  */
 function copy_file( $file_path, $root_ID, $path, $check_perms = true )
 {
-	global $current_User;
+	global $current_User, $force_upload_forbiddenext;
 
 	$FileRootCache = & get_FileRootCache();
 	$fm_FileRoot = & $FileRootCache->get_by_ID($root_ID, true);
@@ -2032,7 +2032,7 @@ function copy_file( $file_path, $root_ID, $path, $check_perms = true )
 			$current_extension = $path_info['extension'];
 
 			// change file extension to the correct extension, but only if the correct extension is not restricted, this is an extra security check!
-			if( strtolower($current_extension) != strtolower($correct_extension) && ( !in_array( $correct_extension, $force_upload_forbiddenext ) ) )
+			if( strtolower($current_extension) != strtolower($correct_extension) && ( !in_array( $correct_extension, $force_upload_forbiddenext ) ) ) // I have seen that $force_upload_forbiddenext variable was undefined, so added it globally in current function
 			{	// change the file extension to the correct extension
 				$old_name = $newName;
 				$newName = $path_info['filename'].'.'.$correct_extension;
@@ -2802,29 +2802,36 @@ echo_modalwindow_js();
  */
 function echo_confirm_file_delete()
 {
+	global $baseUrl;
 ?>
 <script type="text/javascript">
 	//<![CDATA[
-	function getQueryVariable(variable, href) {
-		var vars = href.split("&");
-		for (var i=0;i<vars.length;i++) {
-			var pair = vars[i].split("=");
-			if (pair[0] == variable) {
-				return pair[1];
-			}
-		}
+	function getQueryVariable( name, href ) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+			var url = '<?php echo $baseUrl; ?>'+ href;
+			var results = regex.exec(url);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
+
+	var old_href = '';
 	// Modal to delete file
 	function confirm_file_delete( href )
 	{
-		var blog = getQueryVariable("/admin.php?blog", href);
+		var blog = getQueryVariable("blog", href);
 		var ctrl = getQueryVariable("ctrl", href);
 		var root = getQueryVariable("root", href);
 		var action = getQueryVariable("action", href);
 		var fm_selected = getQueryVariable("fm_selected[]", href);
 		var crumb_file = getQueryVariable("crumb_file", href);
 
-		if (!jQuery('#dataConfirmModal').length) {
+		if ( jQuery('#dataConfirmModal').length > 0 && old_href != href ) {
+			jQuery('#dataConfirmModal').remove();
+		}
+
+		if ( ! jQuery('#dataConfirmModal').length ) {
+
+			old_href = href;
 			jQuery('body').append('' +
 				'<div id="dataConfirmModal" class="modal fade pin_modal" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true">' +
 					'<div class="modal-dialog manage_page_modal">'+
