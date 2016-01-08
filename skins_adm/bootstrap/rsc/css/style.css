@@ -993,11 +993,11 @@ div.results {
 }
 table.table thead tr th {
   background: #e8e8e8;
-  color: #777777;
+  color: #383838;
   text-align: center;
 }
 table.table thead tr th a {
-  color: #777777;
+  color: #383838;
 }
 table.table thead tr th a.basic_current,
 table.table thead tr th a:hover {
